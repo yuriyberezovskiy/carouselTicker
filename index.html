@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/prettify.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/carousel-ticker.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <title>Carousel-Ticker</title>
+    </head>
+
+  <body>
+    <header>
+      <div class="inner ta-center">
+        <h1>Carousel-Ticker</h1>
+        <p>A lightness, flexible jQuery plugin enabling you to easily create semantic, modern carousel-ticker enchanced with the power of CSS. <br>
+            Supports: Chrome, FireFox, Safari, Opera, IE7, IE8, IE9, IE10, IE11</p>
+        <h2>Simple Carousel Ticker, try it! <a href="https://github.com/likeclever1/likeclever1.github.io/archive/master.zip" class="btn">Download</a></h2>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+            <div id="demos">
+                <h1>Demos</h1>
+                <h4>Default Setting</h4>
+                    <div class="carouselTicker">
+                        <ul class="carouselTicker__list">
+                            <li class="carouselTicker__item">1</li>
+                            <li class="carouselTicker__item">2</li>
+                            <li class="carouselTicker__item">3</li>
+                            <li class="carouselTicker__item">4</li>
+                            <li class="carouselTicker__item">5</li>
+                            <li class="carouselTicker__item">6</li>
+                            <li class="carouselTicker__item">7</li>
+                            <li class="carouselTicker__item">8</li>
+                            <li class="carouselTicker__item">9</li>
+                            <li class="carouselTicker__item">10</li>
+                            <li class="carouselTicker__item">11</li>
+                            <li class="carouselTicker__item">12</li>
+                            <li class="carouselTicker__item">13</li>
+                            <li class="carouselTicker__item">14</li>
+                            <li class="carouselTicker__item">15</li>
+                        </ul>
+                    </div>
+            </div>
+            <div id="getting-started">
+                <h1>Getting Started</h1>
+                <h3>1. Load jQuery and include Carousel-Ticker's plugin files</h3>
+
+                <p>After you download Carousel-Ticker, move carousel-ticker.css and jquery.carousel-ticker.min.js to you root's CSS and Javascript directories. Next, load JQuery and include Carousel-Ticker CSS and Javascript files inside of your tags:</p>
+                <p>
+                    <pre>
+<span class="tag">&lt;head&gt;</span><span class="pln">
+...
+
+    </span><span class="tag">&lt;link</span><span class="pln"> </span><span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/css"</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"stylesheets/carousel-ticker.css"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+
+    </span><span class="tag">&lt;script</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/javascript"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span><span class="pln">
+    </span><span class="tag">&lt;script</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/javascript"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"javascripts/jquery.carousel-ticker.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span><span class="pln">
+
+...
+</span><span class="tag">&lt;/head&gt;</span></pre>
+                </p>
+
+                <h3>2. Set up your HTML</h3>
+                <p>Class Naming Carousel-Ticker based on BEM principles, so we need main element-container with main name for example "carouselTicker", inside tag.carouselTicker__list - that will be container-list with our content items and inside it we can include items like tag.carouselTicker__item</p>
+
+                <h4>Example HTML</h4>
+                    <p>
+                        <pre>
+<span class="tag">&lt;div </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"carouselTicker"</span>&gt;
+    <span class="tag">&lt;ul </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"carouselTicker__list"</span>&gt;
+            <span class="tag">&lt;li </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"carouselTicker__list"</span>&gt;<span class="pln">1</span><span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;li </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"carouselTicker__list"</span>&gt;<span class="pln">2</span><span class="tag">&lt;/li&gt;</span><span class="pln">
+            ...
+            </span><span class="tag">&lt;li </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"carouselTicker__list"</span>&gt;<span class="pln">n</span><span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+                    </p>
+
+                    <h3>3. Activate Carousel-Ticker</h3>
+                    <p>The last thing we have to do is activate the plugin. To do this, add the following script right before your closing <span class="tag">&lt;/head&gt;</span> tag</p>
+
+                    <p>
+                        <pre>
+<span class="tag">&lt;head&gt;</span><span class="pln">
+
+    ...
+
+    </span><span class="tag">&lt;script&gt;</span><span class="pln">
+        $</span><span class="pun">(</span><span class="pln">document</span><span class="pun">).</span><span class="pln">ready</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            $</span><span class="pun">(</span><span class="str">'.carouselTicker'</span><span class="pun">).</span><span class="pln">carouselTicker</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">});</span><span class="pln">
+    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+</span><span class="tag">&lt;/head&gt;</span></pre>
+                    </p>
+                    <h4>Customizing Carousel-Ticker Functionality</h4>
+                    <p>Carousel-Ticker options gives you a wide range of variables(in future ;) ) to tweak functionality. To learn more about all of the options, read the Options section. Here's just a few of the things you can play with:</p>
+                    <p>
+                        <pre>
+<span class="pln">$</span><span class="pun">(</span><span class="str">'.carouselTicker'</span><span class="pun">).</span><span class="pln">carouselTicker</span><span class="pun">({</span><span class="pln">
+   speed</span><span class="pun">:</span><span class="pln"> </span><span class="str">5</span><span class="pun">,</span><span class="pln">
+   delay</span><span class="pun">:</span><span class="pln"> </span><span class="lit">50</span><span class="pun">,</span><span class="pln">
+   reverse</span><span class="pun">:</span><span class="pln"> </span><span class="str">true</span><span class="pun">
+</span><span class="pun">});</span></pre>
+                    </p>
+                
+                <div id="options">
+                    <h1>Options</h1>
+                    <h3>3. Activate Carousel-Ticker</h3>
+
+                    <table>
+                        <tr>
+                            <td>speed</td>
+                            <td>integer</td>
+                            <td>Determines speed rotate the Carousel-Ticker. <strong>Default: 1</strong></td>
+                        </tr>
+                        <tr>
+                            <td>delay</td>
+                            <td>integer</td>
+                            <td>This is parameter determines speed the Carousel-Ticker. <strong>Default: 30</strong></td>
+                        </tr>
+                        <tr>
+                            <td>reverse</td>
+                            <td>boolean</td>
+                            <td>Determines direction Carousel-Ticker. <strong>Default: false</strong></td>
+                        </tr>
+                    </table>
+                </div><!-- end #options -->
+
+                <div id="advanced">
+                    <h1>Advanced</h1>
+                    <h3>The Carousel-Ticker API</h3>
+                    <p>It will be soon.</p>
+                    <h3>Using AJAX to generate your Carousel-Ticker content</h3>
+                    <p>It will be soon.</p>
+                </div><!-- end #advanced -->
+
+                <div id="talk">
+                    <h1>Talk</h1>
+                    <h3>Share thoughts, questions, & bugs!</h3>
+                    <p>Head on over to Carousel-Ticker's issue tracker on GitHub: <a href="https://github.com/likeclever1/carousel-ticker/issues">https://github.com/likeclever1/carousel-ticker/issues</a></p>
+                </div><!-- end #advanced -->
+            </div>
+        </section>
+
+        <aside id="sidebar">
+            <nav class="menu">
+                <a href="#download">Download</a>
+                <a href="#demos">Demos</a>
+                <a href="#get-started">Get Started</a>
+                <a href="#options">Options</a>
+                <a href="#advanced">Advanced</a>
+                <a href="#talk">Talk</a>
+            </nav>
+        </aside>
+      </div>
+    </div>
+    
+    <footer>
+        <p>
+            Developed and maintained by <a href="mailto: yuriy.beresovskiy@gmail.com" class="white">Berezovskiy Yuriy</a> under the <a href="http://opensource.org/licenses/MIT" class="white">MIT license</a>
+        </p>
+    </footer>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.carousel-ticker.js"></script>
+    <script type="text/javascript" src="javascripts/start.js"></script>
+  </body>
+</html>
