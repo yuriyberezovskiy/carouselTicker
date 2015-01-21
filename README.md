@@ -1,0 +1,2 @@
+# carousel-ticker
+jQuery plugin
