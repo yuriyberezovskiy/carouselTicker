@@ -1,14 +1,17 @@
-/* carousel ticker by Yuriy Berezovskiy
- * Lincensed under GPL2 - http://www.gnu.org/licenses/gpl-2.0.html
- * Option quick reference:
- * - speed: speed rotate carousel
- * - reverse: direction carousel
- * - delay: A delay carousel
- * Method quick reference:
- * More information visit https://github.com/likeclever1/carousel/
+/**
+ * carousel-ticker by Yuriy Berezovskiy
+ * The MIT License (MIT)
+ * Usage $('.carousel-ticker').carouselTicker();
+ * Options:
+ * - speed: integer
+ * - delay: integer
+ * - reverse: boolean
+ *
+ * More information visit http://likeclever1.github.io/carousel-ticker/
  */
 
 "use strict";
+
 (function($) {
 
     $.carouselTicker = function (el, settings) {
