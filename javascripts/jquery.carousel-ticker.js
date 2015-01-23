@@ -27,7 +27,6 @@
         this.linkCls = this.$el.attr("class") + "__link";
         this.childsWidth = 0;
         this.initialize = false;
-        this.cloneChildsWidth = 0;
         this.$parent = this.$el.parent();
         this.defaults = {
             speed: 1,

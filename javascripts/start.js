@@ -1,7 +1,5 @@
 (function ($, undefined) {
-    "use strict";
     
-    $(".carouselTicker").carouselTicker({
-        reverse: true
-    });
+    $(".carouselTicker").carouselTicker();
+
 })(jQuery);
