@@ -144,7 +144,7 @@
             // initialize resize event
             _resize();
             // start ticker-carousel
-            ticker.intervalPointer = setInterval(function() {_moveTicker(), ticker.settings.delay});
+            ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
             // initialize eventOver event
             _eventOver();
             // initialize eventOut event
@@ -159,15 +159,17 @@
 
         var _moveTicker = function() {
             // step ticker moving
-            ticker.$list.css("left", '+=' + ticker.directionSwitcher * ticker.settings.speed);
+            ticker.$list.css("left", '+=' + ticker.directionSwitcher * ticker.settings.speed + "px");
             // depending of direction change offset list for effect Infinity rotate
             if(ticker.settings.direction === "prev") {
                 if(Math.abs(parseInt(ticker.$list.css("left"))) >= ticker.itemsWidth) {
                     ticker.$list.css("left", 0);
                 }
-            } else {
+            }
+
+            if(ticker.settings.direction === "next") {
                 if(parseInt(ticker.$list.css("left")) >= 0) {
-                    ticker.$list.css("left", -self.itemsWidth);
+                    ticker.$list.css("left", -ticker.itemsWidth + "px");
                 }
             }
         };
@@ -229,12 +231,14 @@
             ticker.$list.on(ticker.eventTypes.mousedown, function(e) {
                 var start = e.clientX || event.touches[0].pageX,
                     $this = $(this),
-                    posList = $this.css("left");
+                    posList = parseFloat($(this).css("left"));
 
                 $(e.target).off("click");
+                clearInterval(ticker.intervalPointer);
                 ticker.intervalPointer = false;
+                flag = true;
 
-                ticker.$list.on(ticker.eventTypes.mousemove, function(e) {
+                $this.on(ticker.eventTypes.mousemove, function(e) {
                     var x = e.clientX || event.touches[0].pageX,
                         // fix for touch device
                         diff = start - x;
@@ -243,19 +247,22 @@
                     ticker.isMousemove = true;
 
                     if(flag) {
-                        if(parseFloat(posList) - diff >= 0) {
-                            ticker.$list.css("left", "-=" + ticker.itemsWidth);
-                            posList -= ticker.itemsWidth;
+                        // if drag more left side
+                        if(posList - diff >= 0 && ticker.directionSwitcher === 1) {
+                            $this.css("left", "-=" + ticker.itemsWidth);
+                            posList = -ticker.itemsWidth;
                             start = e.clientX || event.touches[0].pageX;
+                            diff = 0;
                         }
-
-                        if(Math.abs(parseFloat(posList)) - diff >= ticker.itemsWidth) {
-                            ticker.$list.css("left", 0);
+                        // if drag more right side
+                        if(posList - diff <= -ticker.itemsWidth && ticker.directionSwitcher === -1) {
+                            $this.css("left", 0);
                             posList = 0;
+                            diff = 0;
                             start = e.clientX || event.touches[0].pageX;
                         }
 
-                        ticker.$list.css("left", parseFloat(posList) - diff + "px");
+                        $this.css("left", posList - diff + "px");
                     }
                 });
             });
@@ -272,7 +279,8 @@
 
                 flag = false;
                 ticker.isMousemove = false;
-                ticker.$list.off(ticker.eventTypes.mousemove);
+                ticker.settings.direction = (ticker.directionSwitcher === 1) ? "next" : "prev";
+                $(this).off(ticker.eventTypes.mousemove);
                 
                 if(ticker.intervalPointer) clearInterval(ticker.intervalPointer);
                 
@@ -282,15 +290,15 @@
 
         function _resize() {
 
-            $(window).on('resize', function() {
-                ticker._calcItemsWidth();
+            // $(window).on('resize', function() {
+            //     _calcItemsWidth();
 
-                if(ticker.itemsWidth > ticker.$parent.width()) {
-                    if(!ticker.isInitialize) ticker._init();
-                } else {
-                    if(ticker.isInitialize) el.destructor();
-                }
-            });
+            //     if(ticker.itemsWidth > ticker.$parent.width()) {
+            //         if(!ticker.isInitialize) _init();
+            //     } else {
+            //         if(ticker.isInitialize) el.destructor();
+            //     }
+            // });
         };
 
         /**
@@ -304,7 +312,7 @@
         el.destructor = function() {
             $el.find("." + ticker.cloneCls).remove();
 
-            if($el.find("." + self.wrapCls).length) {
+            if($el.find("." + ticker.wrapCls).length) {
                 ticker.$list.unwrap();
                 ticker.$list.css({'left': 'auto', 'position': 'static', 'width': 'auto'});
             }
