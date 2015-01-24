@@ -23,6 +23,7 @@
         
         // GENERAL
         direction: "prev",
+        mode: "horizontal",
         speed: 1,
         delay: 30,
 
@@ -71,6 +72,10 @@
             ticker.itemsWidth = 0;
             // set default value childs (items + clone)
             ticker.childsWidth = 0;
+            // set default value items inside ticker
+            ticker.itemsHeight = 0;
+            // set default value childs (items + clone)
+            ticker.childsHeight = 0;
             // determine list
             ticker.$list = $el.children("ul");
             // determine items
@@ -102,34 +107,62 @@
          */
         
         var _setup = function() {
-            // determine summ items width
-            _calcItemsWidth();
-            // if summ items width > width parent el
-            if(ticker.itemsWidth > ticker.$parent.width()) {
-                // check wrap element
-                if($el.children().hasClass(ticker.wrapCls)) return;
-                // wrap list in a wrapper
-                ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
-                // clone items and push to list
-                ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
-                // add css for list
-                ticker.$list.css({
-                    "position": "relative",
-                    "left": 0,
-                    "width": ticker.itemsWidth*2
-                });
+            // if horizontal mode
+            if(ticker.settings.mode === "horizontal") {
+                // determine summ items width
+                _calcItemsWidth();
+                // if summ items width > width parent el
+                if(ticker.itemsWidth > ticker.$parent.width()) {
+                    // check wrap element
+                    if($el.children().hasClass(ticker.wrapCls)) return;
+                    // wrap list in a wrapper
+                    ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
+                    // clone items and push to list
+                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
+                    // add css for list
+                    ticker.$list.css({
+                        "position": "relative",
+                        "left": 0,
+                        "width": ticker.itemsWidth*2
+                    });
+                    // set true to initialize value
+                    ticker.isInitialize = true;
+                    // start add functionality
+                    _start();
+                }
+            // if vertical mode
+            } else if(ticker.settings.mode === "vertical") {
+                // determine summ items height
+                _calcItemsHeight();
+                // if summ items height > height parent el
+                if(ticker.itemsHeight > ticker.$parent.height()) {
+                    // check wrap el
+                    if($el.children().hasClass(ticker.wrapCls)) return;
+                    // wrap list in a wrapper
+                    ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
+                    // clone items and push to list
+                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
+                    // add css for list
+                    ticker.$list.css({
+                        "position": "relative",
+                        "top": 0,
+                        "height": ticker.itemsHeight*2
+                    });
+                    // set true to initialize value
+                    ticker.isInitialize = true;
+                    // start add functionality
+                    _start();
+                }
+            }
 
-                ticker.initialize = true;
-
+            if(ticker.isInitialize) {
                 $(window).on("load", function() {
-                    // delete event dragstart from link and image
+                        // delete event dragstart from link and image
                     $el.on("dragstart", function(e) {
                         if (e.target.nodeName.toUpperCase() == "IMG" || e.target.nodeName.toUpperCase() == "A") {
                             return false;
                         }
                     });
-
-                    _start();
                 });
             }
         };
@@ -158,18 +191,20 @@
          */
 
         var _moveTicker = function() {
+            var mode = (ticker.settings.mode === "horizontal") ? "left" : "top",
+                itemsSize = (ticker.settings.mode === "horizontal") ? ticker.itemsWidth : ticker.itemsHeight;
             // step ticker moving
-            ticker.$list.css("left", '+=' + ticker.directionSwitcher * ticker.settings.speed + "px");
+            ticker.$list.css(mode, '+=' + ticker.directionSwitcher * ticker.settings.speed + "px");
             // depending of direction change offset list for effect Infinity rotate
             if(ticker.settings.direction === "prev") {
-                if(Math.abs(parseInt(ticker.$list.css("left"))) >= ticker.itemsWidth) {
-                    ticker.$list.css("left", 0);
+                if(Math.abs(parseInt(ticker.$list.css(mode))) >= itemsSize) {
+                    ticker.$list.css(mode, 0);
                 }
             }
 
             if(ticker.settings.direction === "next") {
-                if(parseInt(ticker.$list.css("left")) >= 0) {
-                    ticker.$list.css("left", -ticker.itemsWidth + "px");
+                if(parseInt(ticker.$list.css(mode)) >= 0) {
+                    ticker.$list.css(mode, -itemsSize + "px");
                 }
             }
         };
@@ -190,13 +225,30 @@
         };
 
         /**
+         * Method calc summ items height
+         */
+        function _calcItemsHeight() {
+            // set value 0 to default
+            ticker.itemsHeight = 0;
+            // calc sum
+            ticker.$items.each(function() {
+                var $this = $(this);
+                // if item clone - calc summ without it
+                if($this.hasClass(ticker.cloneCls)) return;
+                    ticker.itemsHeight += $this.outerHeight(true);
+            });
+        };
+
+        /**
          * Event Methods _eventOver, _eventOut, _eventDragAndDrop, _resize
          */
         function _eventOver() {
             // if mouse over ticker
             $el.on("mouseover", function() {
-                // if ticker width > outer width block
-                if(ticker.itemsWidth > ticker.$parent.width()) {
+                // depending from mode choose condition
+                var condition = (ticker.settings.mode === "horizontal") ? (ticker.itemsWidth > ticker.$parent.width()) : (ticker.itemsHeight > ticker.$parent.height());
+                // if ticker width/height > outer width/height block
+                if(condition) {
                     // make clearInterval
                     clearInterval(ticker.intervalPointer);
                     // make clearInterval
@@ -208,6 +260,8 @@
         function _eventOut() {
             // if mouse leave from el
             $el.on("mouseleave", function() {
+                // depending from mode choose condition
+                var condition = (ticker.settings.mode === "horizontal") ? (ticker.itemsWidth > ticker.$parent.width()) : (ticker.itemsHeight > ticker.$parent.height());
                 // if mouse move
                 if(ticker.isMousemove) {
                     // off event behaviour mousemove
@@ -216,7 +270,7 @@
                     ticker.$list.trigger(ticker.eventTypes.mouseup);
                 }
                 // if ticker width > outer width block
-                if(ticker.itemsWidth > ticker.$parent.width()) {
+                if(condition) {
                     // protection from double setInterval
                     if(ticker.intervalPointer) return;
                         // call _moveTicker
@@ -230,8 +284,10 @@
 
             ticker.$list.on(ticker.eventTypes.mousedown, function(e) {
                 var start = e.clientX || event.touches[0].pageX,
+                    startY = e.clientY || event.touches[0].pageY,
                     $this = $(this),
-                    posList = parseFloat($(this).css("left"));
+                    posList = parseFloat($(this).css("left")),
+                    posListY = parseFloat($(this).css("top"));
 
                 $(e.target).off("click");
                 clearInterval(ticker.intervalPointer);
@@ -240,29 +296,56 @@
 
                 $this.on(ticker.eventTypes.mousemove, function(e) {
                     var x = e.clientX || event.touches[0].pageX,
+                        y = e.clientY || event.touches[0].pageY,
                         // fix for touch device
-                        diff = start - x;
+                        diff = start - x,
+                        diffY = startY - y;
 
-                    ticker.directionSwitcher = (diff >= 0) ? -1 : 1;
+                    if(ticker.settings.mode === "horizontal") {
+                        ticker.directionSwitcher = (diff >= 0) ? -1 : 1;
+                    } else if(ticker.settings.mode === "vertical") {
+                        ticker.directionSwitcher = (diffY >= 0) ? -1 : 1;
+                    }
+
                     ticker.isMousemove = true;
 
                     if(flag) {
-                        // if drag more left side
-                        if(posList - diff >= 0 && ticker.directionSwitcher === 1) {
-                            $this.css("left", "-=" + ticker.itemsWidth);
-                            posList = -ticker.itemsWidth;
-                            start = e.clientX || event.touches[0].pageX;
-                            diff = 0;
-                        }
-                        // if drag more right side
-                        if(posList - diff <= -ticker.itemsWidth && ticker.directionSwitcher === -1) {
-                            $this.css("left", 0);
-                            posList = 0;
-                            diff = 0;
-                            start = e.clientX || event.touches[0].pageX;
-                        }
+                        if(ticker.settings.mode === "horizontal") {
+                            // if drag more left side
+                            if(posList - diff >= 0 && ticker.directionSwitcher === 1) {
+                                $this.css("left", "-=" + ticker.itemsWidth);
+                                posList = -ticker.itemsWidth;
+                                start = e.clientX || event.touches[0].pageX;
+                                diff = 0;
+                            }
+                            // if drag more right side
+                            if(posList - diff <= -ticker.itemsWidth && ticker.directionSwitcher === -1) {
+                                $this.css("left", 0);
+                                posList = 0;
+                                diff = 0;
+                                start = e.clientX || event.touches[0].pageX;
+                            }
 
-                        $this.css("left", posList - diff + "px");
+                            $this.css("left", posList - diff + "px");
+
+                        } else if(ticker.settings.mode === "vertical") {
+                            // if drag more top side
+                            if(posListY - diffY >= 0 && ticker.directionSwitcher === 1) {
+                                $this.css("top", "-=" + ticker.itemsHeight);
+                                posListY = -ticker.itemsHeight;
+                                startY = e.clientY || event.touches[0].pageY;
+                                diffY = 0;
+                            }
+                            // if drag more right side
+                            if(posListY - diffY <= -ticker.itemsHeight && ticker.directionSwitcher === -1) {
+                                $this.css("top", 0);
+                                posListY = 0;
+                                diffY = 0;
+                                startY = e.clientY || event.touches[0].pageY;
+                            }
+
+                            $this.css("top", posListY - diffY + "px");
+                        }
                     }
                 });
             });
