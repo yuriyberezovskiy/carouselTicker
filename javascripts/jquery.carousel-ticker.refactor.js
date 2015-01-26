@@ -88,6 +88,8 @@
             ticker.$parent = $el.parent();
             // set wrapper class
             ticker.wrapCls = "carousel-ticker__wrap";
+            // set loader class
+            ticker.loaderCls = "carousel-ticker__loader";
             // set clone class
             ticker.cloneCls = "carousel-ticker__clone";
             // determine touch events
@@ -115,6 +117,8 @@
                 if(ticker.itemsWidth > ticker.$parent.width()) {
                     // check wrap element
                     if($el.children().hasClass(ticker.wrapCls)) return;
+                    // add loader
+                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
                     // wrap list in a wrapper
                     ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
                     // clone items and push to list
@@ -138,6 +142,8 @@
                 if(ticker.itemsHeight > ticker.$parent.height()) {
                     // check wrap el
                     if($el.children().hasClass(ticker.wrapCls)) return;
+                    // add loader
+                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
                     // wrap list in a wrapper
                     ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
                     // clone items and push to list
@@ -173,9 +179,9 @@
         
         var _start = function() {
             // remove the loading DOM element
-            // ticker.loader.remove
+            if($el.find("." + ticker.loaderCls).length) $el.find("." + ticker.loaderCls).remove();
             // initialize resize event
-            _resize();
+            //if(ticker.settings.mode === "horizontal") _resize();
             // start ticker-carousel
             ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
             // initialize eventOver event
@@ -371,17 +377,14 @@
             });
         };
 
-        function _resize() {
+        el.resize = function() {
 
-            // $(window).on('resize', function() {
-            //     _calcItemsWidth();
-
-            //     if(ticker.itemsWidth > ticker.$parent.width()) {
-            //         if(!ticker.isInitialize) _init();
-            //     } else {
-            //         if(ticker.isInitialize) el.destructor();
-            //     }
-            // });
+            _calcItemsWidth();
+            if(ticker.itemsWidth > ticker.$parent.width()) {
+                if(!ticker.isInitialize) _init();
+            } else {
+                if(ticker.isInitialize) el.destructor();
+            }
         };
 
         /**
@@ -393,6 +396,7 @@
          */
         
         el.destructor = function() {
+            console.log("destructor");
             $el.find("." + ticker.cloneCls).remove();
 
             if($el.find("." + ticker.wrapCls).length) {

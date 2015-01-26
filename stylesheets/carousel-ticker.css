@@ -1,5 +1,10 @@
-.carouselTicker{
+.carouselTickerVertical{
+    height: 600px;
+}
+
+.carouselTickerVertical, .carouselTicker{
     overflow: hidden;
+    position: relative;
     float: none;
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -47,4 +52,13 @@
     height: 60px;
     line-height: 60px;
     text-align: center;
+}
+
+.carousel-ticker__loader{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff url(../images/loader.gif) center center no-repeat;
 }
