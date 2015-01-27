@@ -368,8 +368,8 @@
                 $(this).off(ticker.eventTypes.mousemove);
                 
                 if(ticker.intervalPointer) clearInterval(ticker.intervalPointer);
-                
-                if(ticker.touch) ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.options.delay);
+
+                if(ticker.touch) ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
             });
         };
 
