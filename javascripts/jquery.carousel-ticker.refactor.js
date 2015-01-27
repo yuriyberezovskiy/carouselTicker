@@ -28,7 +28,7 @@
         delay: 30,
 
         // CALLBACKS
-        onSliderTickerLoad: function() {}
+        onCarouselTickerLoad: function() {}
     };
 
     $.fn.carouselTicker = function(options) {
@@ -115,24 +115,11 @@
                 _calcItemsWidth();
                 // if summ items width > width parent el
                 if(ticker.itemsWidth > ticker.$parent.width()) {
-                    // check wrap element
-                    if($el.children().hasClass(ticker.wrapCls)) return;
-                    // add loader
-                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
-                    // wrap list in a wrapper
-                    ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
-                    // clone items and push to list
-                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
-                    // add css for list
-                    ticker.$list.css({
-                        "position": "relative",
-                        "left": 0,
-                        "width": ticker.itemsWidth*2
-                    });
-                    // set true to initialize value
-                    ticker.isInitialize = true;
-                    // start add functionality
-                    _start();
+                    // set new width
+                    $el.find("." + ticker.wrapCls).css({"width": ticker.$parent.width() + "px"});
+                    ticker.$list.css({"width": ticker.itemsWidth*2, "left": 0});
+                    // set common parameters
+                    setupFunc();
                 }
             // if vertical mode
             } else if(ticker.settings.mode === "vertical") {
@@ -140,24 +127,11 @@
                 _calcItemsHeight();
                 // if summ items height > height parent el
                 if(ticker.itemsHeight > ticker.$parent.height()) {
-                    // check wrap el
-                    if($el.children().hasClass(ticker.wrapCls)) return;
-                    // add loader
-                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
-                    // wrap list in a wrapper
-                    ticker.$list.wrap("<div class='carousel-ticker__wrap'></div>");
-                    // clone items and push to list
-                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
-                    // add css for list
-                    ticker.$list.css({
-                        "position": "relative",
-                        "top": 0,
-                        "height": ticker.itemsHeight*2
-                    });
-                    // set true to initialize value
-                    ticker.isInitialize = true;
-                    // start add functionality
-                    _start();
+                    // set new height
+                    $el.find("." + ticker.wrapCls).css({"height": ticker.$parent.height() + "px"});
+                    ticker.$list.css({"height": ticker.itemsHeight*2, "top": 0});
+                    // set common parameters
+                    setupFunc();
                 }
             }
 
@@ -171,6 +145,30 @@
                     });
                 });
             }
+
+            function setupFunc() {
+                // check wrap el
+                if($el.children().hasClass(ticker.wrapCls)) return;
+                    // add loader
+                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
+                    // set css to element
+                    $el.find("." + ticker.wrapCls).css({"position": "relative"});
+                    // wrap list in a wrapper
+                    ticker.$list.wrap("<div class='carousel-ticker__wrap' style='position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none;'></div>");
+                    // clone items and push to list
+                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
+                    // add css for list
+                    ticker.$list.css({
+                        "position": "relative"
+                    });
+
+                // set true to initialize value
+                ticker.isInitialize = true;
+                // onSliderLoad callback
+                ticker.settings.onCarouselTickerLoad();
+                // start add functionality
+                _start();
+            };
         };
 
         /**
@@ -180,8 +178,6 @@
         var _start = function() {
             // remove the loading DOM element
             if($el.find("." + ticker.loaderCls).length) $el.find("." + ticker.loaderCls).remove();
-            // initialize resize event
-            //if(ticker.settings.mode === "horizontal") _resize();
             // start ticker-carousel
             ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
             // initialize eventOver event
@@ -246,7 +242,7 @@
         };
 
         /**
-         * Event Methods _eventOver, _eventOut, _eventDragAndDrop, _resize
+         * Event Methods _eventOver, _eventOut, _eventDragAndDrop
          */
         function _eventOver() {
             // if mouse over ticker
@@ -377,9 +373,19 @@
             });
         };
 
-        el.resize = function() {
+        /**
+         * Public Methods
+         */
+        
+        /**
+         * resize carouselTicker
+         *
+         **/
 
+        el.resizeTicker = function() {
+            
             _calcItemsWidth();
+
             if(ticker.itemsWidth > ticker.$parent.width()) {
                 if(!ticker.isInitialize) _init();
             } else {
@@ -388,20 +394,33 @@
         };
 
         /**
-         * Public Methods
+         * Stop rotate carouselTicker
          */
-        
+
+        el.stop = function() {
+            clearInterval(ticker.intervalPointer);
+            ticker.intervalPointer = false;
+        };
+
+         /**
+         * Run carouselTicker
+         */
+
+        el.run = function() {
+            _start();
+        };
+
         /**
          * Destroy the current instance of the ticker (revert everything back to original state)
          */
-        
+
         el.destructor = function() {
-            console.log("destructor");
             $el.find("." + ticker.cloneCls).remove();
 
             if($el.find("." + ticker.wrapCls).length) {
                 ticker.$list.unwrap();
                 ticker.$list.css({'left': 'auto', 'position': 'static', 'width': 'auto'});
+                $el.css({"width": "auto", "position": "static"})
             }
 
             clearInterval(ticker.intervalPointer);
@@ -412,7 +431,7 @@
         /**
          * Reload the ticker (revert all DOM changes, and re-initialize)
          */
-        el.reloadSlider = function(settings){
+        el.reloadCarouselTicker = function(settings){
             if (settings != undefined) options = settings;
             el.destructor();
             _init();

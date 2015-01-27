@@ -1,17 +1,6 @@
-.carouselTickerVertical{
-    height: 600px;
-}
-
-.carouselTickerVertical, .carouselTicker{
-    overflow: hidden;
-    position: relative;
-    float: none;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-         -o-user-select: none;
-           user-select: none;
-}
+/**
+ * CSS style for carouselTicker
+ **/
 
 .carouselTicker__list{
     margin: 10px 0;
@@ -21,32 +10,8 @@
 }
 
 .carouselTicker__item{
-    margin: 0;
+    margin: 0 0 0 5px;
     float: left;
-    border: 4px solid red;
-    margin-left: 5px;
-    width: 100px;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-}
-
-.carouselTickerVertical{
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-         -o-user-select: none;
-            user-select: none;
-}
-
-.carouselTickerVertical__list{
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.carouselTickerVertical__item{
-    margin: 0 0 5px 0;
     border: 4px solid red;
     width: 100px;
     height: 60px;
@@ -60,5 +25,22 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: #fff url(../images/loader.gif) center center no-repeat;
+    background: #fff url("../images/loader.gif") center center no-repeat;
+}
+
+/**
+ * CSS style for vertical direction
+ **/
+
+.carouselTicker_vertical .carouselTicker__list{
+    margin: 0;
+}
+
+.carouselTicker_vertical .carouselTicker__item{
+    margin: 0 0 5px 0;
+    border: 4px solid red;
+    width: 100px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
 }

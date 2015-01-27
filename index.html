@@ -35,7 +35,7 @@
                 <h1>Demos</h1>
                 <h4>Default Setting</h4>
                 <h4>Horizontal mode</h4>
-                    <div class="carouselTicker">
+                    <div id="carouselTicker" class="carouselTicker">
                         <ul class="carouselTicker__list">
                             <li class="carouselTicker__item">1</li>
                             <li class="carouselTicker__item">2</li>
@@ -58,8 +58,49 @@
                     <br>
                     <br>
                     
+                    <h4>Multiple calls</h4>
                     <div style="width: 400px; margin: 0 auto;">
-                        <div class="carouselTicker">
+                        <div class="carouselTicker carouselTicker-start">
+                            <ul class="carouselTicker__list">
+                                <li class="carouselTicker__item">1</li>
+                                <li class="carouselTicker__item">2</li>
+                                <li class="carouselTicker__item">3</li>
+                                <li class="carouselTicker__item">4</li>
+                                <li class="carouselTicker__item">5</li>
+                                <li class="carouselTicker__item">6</li>
+                                <li class="carouselTicker__item">7</li>
+                                <li class="carouselTicker__item">8</li>
+                                <li class="carouselTicker__item">9</li>
+                                <li class="carouselTicker__item">10</li>
+                                <li class="carouselTicker__item">11</li>
+                                <li class="carouselTicker__item">12</li>
+                                <li class="carouselTicker__item">13</li>
+                                <li class="carouselTicker__item">14</li>
+                                <li class="carouselTicker__item">15</li>
+                            </ul>
+                        </div>
+
+                        <div class="carouselTicker carouselTicker-start">
+                            <ul class="carouselTicker__list">
+                                <li class="carouselTicker__item">1</li>
+                                <li class="carouselTicker__item">2</li>
+                                <li class="carouselTicker__item">3</li>
+                                <li class="carouselTicker__item">4</li>
+                                <li class="carouselTicker__item">5</li>
+                                <li class="carouselTicker__item">6</li>
+                                <li class="carouselTicker__item">7</li>
+                                <li class="carouselTicker__item">8</li>
+                                <li class="carouselTicker__item">9</li>
+                                <li class="carouselTicker__item">10</li>
+                                <li class="carouselTicker__item">11</li>
+                                <li class="carouselTicker__item">12</li>
+                                <li class="carouselTicker__item">13</li>
+                                <li class="carouselTicker__item">14</li>
+                                <li class="carouselTicker__item">15</li>
+                            </ul>
+                        </div>
+
+                        <div class="carouselTicker carouselTicker-start">
                             <ul class="carouselTicker__list">
                                 <li class="carouselTicker__item">1</li>
                                 <li class="carouselTicker__item">2</li>
@@ -81,8 +122,9 @@
                     </div>
                     
                     <br><br>
-
-                    <div class="carouselTicker">
+                    <h4>Example sensitivity to resize, resize your window for start it!</h4>
+                    <br>
+                    <div id="carouselTicker-width-resize" class="carouselTicker">
                         <ul class="carouselTicker__list">
                             <li class="carouselTicker__item">1</li>
                             <li class="carouselTicker__item">2</li>
@@ -91,58 +133,60 @@
                             <li class="carouselTicker__item">5</li>
                         </ul>
                     </div>
-
+                    <br>
                     <h4>Vertical mode</h4>
+                    <br>
                     <div style="overflow: hidden;">
-                        <div style="float: left; ">
-                            <div style="height: 600px; margin: 0 auto; display: inline-block; margin-left: 50px; overflow: hidden; position: relative;">
-                                <div class="carouselTickerVertical ">
-                                    <ul class="carouselTickerVertical__list">
-                                        <li class="carouselTickerVertical__item">1</li>
-                                        <li class="carouselTickerVertical__item">2</li>
-                                        <li class="carouselTickerVertical__item">3</li>
-                                        <li class="carouselTickerVertical__item">4</li>
-                                        <li class="carouselTickerVertical__item">5</li>
-                                        <li class="carouselTickerVertical__item">6</li>
-                                        <li class="carouselTickerVertical__item">7</li>
-                                        <li class="carouselTickerVertical__item">8</li>
-                                        <li class="carouselTickerVertical__item">9</li>
-                                        <li class="carouselTickerVertical__item">10</li>
-                                        <li class="carouselTickerVertical__item">11</li>
-                                        <li class="carouselTickerVertical__item">12</li>
-                                        <li class="carouselTickerVertical__item">13</li>
-                                        <li class="carouselTickerVertical__item">14</li>
-                                        <li class="carouselTickerVertical__item">15</li>
+                        <div style="float: left; width: 50%;">
+                            <div style="height: 600px; width: 108px; ">
+                                <div id="carouselTicker-vertical" class="carouselTicker carouselTicker_vertical">
+                                    <ul class="carouselTicker__list">
+                                        <li class="carouselTicker__item">1</li>
+                                        <li class="carouselTicker__item">2</li>
+                                        <li class="carouselTicker__item">3</li>
+                                        <li class="carouselTicker__item">4</li>
+                                        <li class="carouselTicker__item">5</li>
+                                        <li class="carouselTicker__item">6</li>
+                                        <li class="carouselTicker__item">7</li>
+                                        <li class="carouselTicker__item">8</li>
+                                        <li class="carouselTicker__item">9</li>
+                                        <li class="carouselTicker__item">10</li>
+                                        <li class="carouselTicker__item">11</li>
+                                        <li class="carouselTicker__item">12</li>
+                                        <li class="carouselTicker__item">13</li>
+                                        <li class="carouselTicker__item">14</li>
+                                        <li class="carouselTicker__item">15</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="float: left; margin-left: 200px;">
-                            <div style="height: 600px; margin: 0 auto; display: inline-block; margin-left: 50px; overflow: hidden; position: relative;">
-                                <div class="carouselTickerVertical1 ">
-                                    <ul class="carouselTickerVertical__list">
-                                        <li class="carouselTickerVertical__item">1</li>
-                                        <li class="carouselTickerVertical__item">2</li>
-                                        <li class="carouselTickerVertical__item">3</li>
-                                        <li class="carouselTickerVertical__item">4</li>
-                                        <li class="carouselTickerVertical__item">5</li>
-                                        <li class="carouselTickerVertical__item">6</li>
-                                        <li class="carouselTickerVertical__item">7</li>
-                                        <li class="carouselTickerVertical__item">8</li>
-                                        <li class="carouselTickerVertical__item">9</li>
-                                        <li class="carouselTickerVertical__item">10</li>
-                                        <li class="carouselTickerVertical__item">11</li>
-                                        <li class="carouselTickerVertical__item">12</li>
-                                        <li class="carouselTickerVertical__item">13</li>
-                                        <li class="carouselTickerVertical__item">14</li>
-                                        <li class="carouselTickerVertical__item">15</li>
+                        <div style="float: left; width: 50%;">
+                            <div style="height: 600px; width: 108px; ">
+                                <div id="carouselTicker-vertical-with-callback" class="carouselTicker carouselTicker_vertical">
+                                    <ul class="carouselTicker__list">
+                                        <li class="carouselTicker__item">1</li>
+                                        <li class="carouselTicker__item">2</li>
+                                        <li class="carouselTicker__item">3</li>
+                                        <li class="carouselTicker__item">4</li>
+                                        <li class="carouselTicker__item">5</li>
+                                        <li class="carouselTicker__item">6</li>
+                                        <li class="carouselTicker__item">7</li>
+                                        <li class="carouselTicker__item">8</li>
+                                        <li class="carouselTicker__item">9</li>
+                                        <li class="carouselTicker__item">10</li>
+                                        <li class="carouselTicker__item">11</li>
+                                        <li class="carouselTicker__item">12</li>
+                                        <li class="carouselTicker__item">13</li>
+                                        <li class="carouselTicker__item">14</li>
+                                        <li class="carouselTicker__item">15</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
             </div>
+            <br><br>
             <div id="getting-started">
                 <h1>Getting Started</h1>
                 <h3>1. Load jQuery and include Carousel-Ticker's plugin files</h3>
@@ -211,6 +255,11 @@
 
                     <table>
                         <tr>
+                            <td>mode</td>
+                            <td>string</td>
+                            <td>Determines vertical or horizontal direction Carousel-Ticker. <strong>Default: "horizontal"</strong></td>
+                        </tr>
+                        <tr>
                             <td>speed</td>
                             <td>integer</td>
                             <td>Determines speed rotate the Carousel-Ticker. <strong>Default: 1</strong></td>
@@ -225,20 +274,50 @@
                             <td>boolean</td>
                             <td>Determines direction Carousel-Ticker. <strong>Default: false</strong></td>
                         </tr>
+                        <tr>
+                            <td>onCarouselTickerLoad</td>
+                            <td>function</td>
+                            <td>Called after the carouselTicker has been load.</td>
+                        </tr>
                     </table>
                 </div><!-- end #options -->
 
                 <div id="advanced">
                     <h1>Advanced</h1>
-                    <h3>The Carousel-Ticker API</h3>
-                    <p>It will be soon.</p>
-                    <h3>Using AJAX to generate your Carousel-Ticker content</h3>
-                    <p>It will be soon.</p>
+                    <h3>The CarouselTicker API</h3>
+                    <p>The CarouselTicker API was created to be as flexible and easy to use as possible. The API allows you to create custom triggers, to be sensitivity to resize, destroy CarouselTicker functionality if needed. </p>
+
+                    <p>Here is a quick look at all of the API methods:</p>
+
+                    <p>
+                        <pre><span class="com">// set callback on load carouselTicker</span><span class="pln">
+$</span><span class="pun">(...).</span><span class="pln">carouselTicker</span><span class="pun">(</span><span class="str">'onCarouselTickerLoad'</span><span class="pun">: </span><span class="pln"> function<span class="pun">() {</span> callback </span><span class="pun">});</span><span class="pln">
+
+<span class="com">// set resize handler on carouselTicker</span><span class="pln">
+$</span><span class="pun">(window).</span><span class="pln">on</span><span class="pun">(</span><span class="str">'resize',</span> <span class="pln">function<span class="pun">() {</span>
+    $</span><span class="pun">(...).</span><span class="pln">carouselTicker().resizeTicker();</span>
+<span class="pun">});</span><span class="pln">
+
+<span class="com">// destroy carouselTicker</span><span class="pln">
+$</span><span class="pun">(...).</span><span class="pln">carouselTicker().destructor();</span>
+
+<span class="com">// reload carouselTicker</span><span class="pln">
+$</span><span class="pun">(...).</span><span class="pln">carouselTicker().reloadCarouselTicker();</span>
+
+<span class="com">// stop carouselTicker</span><span class="pln">
+$</span><span class="pun">(...).</span><span class="pln">carouselTicker().stop();</span>
+
+<span class="com">// run carouselTicker</span><span class="pln">
+$</span><span class="pun">(...).</span><span class="pln">carouselTicker().run();</span>
+</pre>
+                    </p>
+
+
                 </div><!-- end #advanced -->
 
                 <div id="talk">
                     <h1>Talk</h1>
-                    <h3>Share thoughts, questions, & bugs!</h3>
+                    <h3>Share thoughts, questions, &amp; bugs!</h3>
                     <p>Head on over to Carousel-Ticker's issue tracker on GitHub: <a href="https://github.com/likeclever1/carousel-ticker/issues">https://github.com/likeclever1/carousel-ticker/issues</a></p>
                 </div><!-- end #advanced -->
             </div>
