@@ -297,11 +297,18 @@
                 flag = true;
 
                 $this.on(ticker.eventTypes.mousemove, function(e) {
+
                     var x = e.clientX || event.touches[0].pageX,
                         y = e.clientY || event.touches[0].pageY,
                         // fix for touch device
                         diff = start - x,
                         diffY = startY - y;
+
+                    if(ticker.touch) {
+                        $(document).on("touchmove", function(e) {
+                            e.preventDefault();
+                        });
+                    }
 
                     if(ticker.settings.mode === "horizontal") {
                         ticker.directionSwitcher = (diff >= 0) ? -1 : 1;
@@ -366,6 +373,10 @@
                 ticker.isMousemove = false;
                 ticker.settings.direction = (ticker.directionSwitcher === 1) ? "next" : "prev";
                 $(this).off(ticker.eventTypes.mousemove);
+                
+                if(ticker.touch) {
+                    $(document).off("touchmove");
+                }
                 
                 if(ticker.intervalPointer) clearInterval(ticker.intervalPointer);
 
