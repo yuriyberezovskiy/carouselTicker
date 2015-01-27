@@ -19,7 +19,7 @@
     text-align: center;
 }
 
-.carousel-ticker__loader{
+.carouselTicker__loader{
     position: absolute;
     left: 0;
     right: 0;

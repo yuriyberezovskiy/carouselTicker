@@ -1,13 +1,13 @@
 /**
- * carousel-ticker by Yuriy Berezovskiy
+ * carouselTicker by Yuriy Berezovskiy
  * The MIT License (MIT)
- * Usage $('.carousel-ticker').carouselTicker();
+ * Usage $('.carouselTicker').carouselTicker();
  * Options:
  * - speed: integer
  * - delay: integer
  * - reverse: boolean
  *
- * More information visit http://likeclever1.github.io/carousel-ticker/
+ * More information visit http://likeclever1.github.io/carouselTicker/
  */
 
 "use strict";

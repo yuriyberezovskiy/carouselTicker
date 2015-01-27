@@ -1,11 +1,11 @@
 /**
- * carousel-ticker v1.0.0
- * More information visit http://likeclever1.github.io/carousel-ticker/
+ * carouselTicker v1.0.0
+ * More information visit http://likeclever1.github.io/carouselTicker/
  * Copyright 2015, Yuriy Berezovskiy
  *
  * Released under the MIT license - http://opensource.org/licenses/MIT
  * 
- * Usages: $('.carousel-ticker').carouselTicker();
+ * Usages: $(...).carouselTicker();
  * 
  * Options:
  * - speed: integer
@@ -87,11 +87,11 @@
             // determine ticker parent
             ticker.$parent = $el.parent();
             // set wrapper class
-            ticker.wrapCls = "carousel-ticker__wrap";
+            ticker.wrapCls = "carouselTicker__wrap";
             // set loader class
-            ticker.loaderCls = "carousel-ticker__loader";
+            ticker.loaderCls = "carouselTicker__loader";
             // set clone class
-            ticker.cloneCls = "carousel-ticker__clone";
+            ticker.cloneCls = "carouselTicker__clone";
             // determine touch events
             ticker.touch = ("ontouchstart" in document.documentElement) ? true : false;
             // determine event types
@@ -154,7 +154,7 @@
                     // set css to element
                     $el.find("." + ticker.wrapCls).css({"position": "relative"});
                     // wrap list in a wrapper
-                    ticker.$list.wrap("<div class='carousel-ticker__wrap' style='position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none;'></div>");
+                    ticker.$list.wrap("<div class='carouselTicker__wrap' style='position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none;'></div>");
                     // clone items and push to list
                     ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
                     // add css for list
@@ -189,7 +189,7 @@
         };
 
         /**
-         * Move carousel-ticker
+         * Move carouselTicker
          */
 
         var _moveTicker = function() {
