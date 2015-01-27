@@ -1,268 +1,446 @@
 /**
- * carouselTicker by Yuriy Berezovskiy
- * The MIT License (MIT)
- * Usage $('.carouselTicker').carouselTicker();
+ * carouselTicker v1.0.0
+ * More information visit http://likeclever1.github.io/carouselTicker/
+ * Copyright 2015, Yuriy Berezovskiy
+ *
+ * Released under the MIT license - http://opensource.org/licenses/MIT
+ * 
+ * Usages: $(...).carouselTicker();
+ * 
  * Options:
  * - speed: integer
  * - delay: integer
- * - reverse: boolean
- *
- * More information visit http://likeclever1.github.io/carouselTicker/
+ * - direction: string - "prev", "next"
  */
 
 "use strict";
 
-(function($) {
+;(function($) {
 
-    $.carouselTicker = function (el, settings) {
-        this.settings = settings;
-        this.itemsWidth = 0;
-        this.timeout = null;
-        this.$el = $(el);
-        this.direction = -1;
-        this.cloneCls = this.$el.attr("class") + '__clone';
-        this.listCls = this.$el.attr("class") + "__list";
-        this.itemsCls = this.$el.attr("class") + "__item";
-        this.wrapCls = this.$el.attr("class") + "__wrap";
-        this.linkCls = this.$el.attr("class") + "__link";
-        this.childsWidth = 0;
-        this.initialize = false;
-        this.$parent = this.$el.parent();
-        this.defaults = {
-            speed: 1,
-            delay: 30,
-            reverse: false
-        };
+    var plugin = {};
 
-        this.touch = ('ontouchstart' in document.documentElement) ? true : false;
-        // Events
-        this.eventTypes = {
-            mousedown: (!this.touch) ? "mousedown" : "touchstart",
-            mousemove: (!this.touch) ? "mousemove" : "touchmove",
-            mouseup: (!this.touch) ? "mouseup" : "touchend"
-        }
+    var defaults = {
+        
+        // GENERAL
+        direction: "prev",
+        mode: "horizontal",
+        speed: 1,
+        delay: 30,
 
-        this.mousemove = false;
-
-        this.init();
-        this.resize();
+        // CALLBACKS
+        onCarouselTickerLoad: function() {}
     };
 
-    $.carouselTicker.prototype = {
-        init: function() {
-            var self = this,
-                $this = self.$el,
-                $items = $this.find("." + self.itemsCls),
-                $list = $this.find("." + self.listCls);
+    $.fn.carouselTicker = function(options) {
+        if(this.length == 0) return this;
 
-            self.options = $.extend({}, self.defaults, self.settings);
+        // support multiple elements
+        if(this.length > 1) {
+            this.each(function() {
+                $(this).carouselTicker(options);
+            });
+            return this;
+        }
+
+        // create a namespace to be throughout the plugin
+        var ticker = {};
+        // set a reference to our slider element
+        var el = this,
+            $el = $(this);
+
+        plugin.el = this,
+        plugin.$el = $(this);
+
+        /**
+         * ===================================================================================
+         * = PRIVATE FUNCTIONS
+         * ===================================================================================
+         */
+
+        /**
+         * Initializes namespace settings to be used throughout plugin
+         */
         
-            if($this.children().hasClass('self.wrapCls')) return;
+        var _init = function() {
+            // merge user-supplied options with defaults
+            ticker.settings = $.extend({}, defaults, options);
+            // initialize pointer timeout
+            ticker.intervalPointer = null;
+            // determine direction ticker
+            ticker.directionSwitcher = (ticker.settings.direction === "prev") ? -1 : 1;
+            // set default value items inside ticker
+            ticker.itemsWidth = 0;
+            // set default value childs (items + clone)
+            ticker.childsWidth = 0;
+            // set default value items inside ticker
+            ticker.itemsHeight = 0;
+            // set default value childs (items + clone)
+            ticker.childsHeight = 0;
+            // determine list
+            ticker.$list = $el.children("ul");
+            // determine items
+            ticker.$items = ticker.$list.children("li");
+            // initialize initialize flag
+            ticker.isInitialize = false;
+            // initialize mousemove flag
+            ticker.isMousemove = false;
+            // determine ticker parent
+            ticker.$parent = $el.parent();
+            // set wrapper class
+            ticker.wrapCls = "carouselTicker__wrap";
+            // set loader class
+            ticker.loaderCls = "carouselTicker__loader";
+            // set clone class
+            ticker.cloneCls = "carouselTicker__clone";
+            // determine touch events
+            ticker.touch = ("ontouchstart" in document.documentElement) ? true : false;
+            // determine event types
+            ticker.eventTypes = {
+                mousedown: (ticker.touch) ? "touchstart" : "mousedown",
+                mousemove: (ticker.touch) ? "touchmove" : "mousemove",
+                mouseup: (ticker.touch) ? "touchend" : "mouseup"
+            };
 
-            self._calcItemsWidth();
+            _setup();
+        };
 
-            if(self.itemsWidth > self.$parent.width()) {
-                self.direction = (self.options.reverse) ? 1 : -1;
+        /**
+         * Performs all DOM and CSS modifications
+         */
+        
+        var _setup = function() {
+            // if horizontal mode
+            if(ticker.settings.mode === "horizontal") {
+                // determine summ items width
+                _calcItemsWidth();
+                // if summ items width > width parent el
+                if(ticker.itemsWidth > ticker.$parent.width()) {
+                    // set new width
+                    $el.find("." + ticker.wrapCls).css({"width": ticker.$parent.width() + "px"});
+                    ticker.$list.css({"width": ticker.itemsWidth*2, "left": 0});
+                    // set common parameters
+                    setupFunc();
+                }
+            // if vertical mode
+            } else if(ticker.settings.mode === "vertical") {
+                // determine summ items height
+                _calcItemsHeight();
+                // if summ items height > height parent el
+                if(ticker.itemsHeight > ticker.$parent.height()) {
+                    // set new height
+                    $el.find("." + ticker.wrapCls).css({"height": ticker.$parent.height() + "px"});
+                    ticker.$list.css({"height": ticker.itemsHeight*2, "top": 0});
+                    // set common parameters
+                    setupFunc();
+                }
+            }
 
-                $items.each(function() {
+            if(ticker.isInitialize) {
+                $(window).on("load", function() {
+                        // delete event dragstart from link and image
+                    $el.on("dragstart", function(e) {
+                        if (e.target.nodeName.toUpperCase() == "IMG" || e.target.nodeName.toUpperCase() == "A") {
+                            return false;
+                        }
+                    });
+                });
+            }
 
-                    self.initialize = true;
-
-                    var $that = $(this),
-                        clone;
-                    
-                    // if drag for a or img have tarouble, fix it
-                    $this.on("dragstart", function(e) {
-                         if (e.target.nodeName.toUpperCase() == "IMG" || e.target.nodeName.toUpperCase() == "A") {
-                             return false;
-                         }
+            function setupFunc() {
+                // check wrap el
+                if($el.children().hasClass(ticker.wrapCls)) return;
+                    // add loader
+                    $("<div class='" + ticker.loaderCls + "'></div>").appendTo($el);
+                    // set css to element
+                    $el.find("." + ticker.wrapCls).css({"position": "relative"});
+                    // wrap list in a wrapper
+                    ticker.$list.wrap("<div class='carouselTicker__wrap' style='position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none;'></div>");
+                    // clone items and push to list
+                    ticker.$items.clone().addClass(ticker.cloneCls).appendTo(ticker.$list);
+                    // add css for list
+                    ticker.$list.css({
+                        "position": "relative"
                     });
 
-                    if($that.hasClass(self.cloneCls)) return;
-                        clone = $that.clone();
-                        clone.addClass(self.cloneCls).appendTo($list);
-                });
-                $this.find("." + self.listCls).css({
-                    'position': 'relative',
-                    'left': 0,
-                    'width': self.itemsWidth + self.cloneWidth
-                }).wrap("<div class=" + self.wrapCls + "></div>");
+                // set true to initialize value
+                ticker.isInitialize = true;
+                // onSliderLoad callback
+                ticker.settings.onCarouselTickerLoad();
+                // start add functionality
+                _start();
+            };
+        };
 
-                self.timeout = setInterval(function() {self._moveCarousel()}, self.options.delay);
-                self._eventOver();
-                self._eventOut();
-                self._eventDragAndDrop();
+        /**
+         * Start the ticker
+         */
+        
+        var _start = function() {
+            // remove the loading DOM element
+            if($el.find("." + ticker.loaderCls).length) $el.find("." + ticker.loaderCls).remove();
+            // start ticker-carousel
+            ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
+            // initialize eventOver event
+            _eventOver();
+            // initialize eventOut event
+            _eventOut();
+            // initialize drag and drop event
+            _eventDragAndDrop();
+        };
+
+        /**
+         * Move carouselTicker
+         */
+
+        var _moveTicker = function() {
+            var mode = (ticker.settings.mode === "horizontal") ? "left" : "top",
+                itemsSize = (ticker.settings.mode === "horizontal") ? ticker.itemsWidth : ticker.itemsHeight;
+            // step ticker moving
+            ticker.$list.css(mode, '+=' + ticker.directionSwitcher * ticker.settings.speed + "px");
+            // depending of direction change offset list for effect Infinity rotate
+            if(ticker.settings.direction === "prev") {
+                if(Math.abs(parseInt(ticker.$list.css(mode))) >= itemsSize) {
+                    ticker.$list.css(mode, 0);
+                }
             }
-        },
 
-        _calcItemsWidth: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el,
-                items = $this.find("." + self.itemsCls);
+            if(ticker.settings.direction === "next") {
+                if(parseInt(ticker.$list.css(mode)) >= 0) {
+                    ticker.$list.css(mode, -itemsSize + "px");
+                }
+            }
+        };
 
-            self.itemsWidth = 0;
-
-            items.each(function() {
+        /**
+         * Method calc summ items width
+         */
+        function _calcItemsWidth() {
+            // set value 0 to default
+            ticker.itemsWidth = 0;
+            // calc sum
+            ticker.$items.each(function() {
                 var $this = $(this);
-                if($this.hasClass(self.cloneCls)) return;
-                        self.itemsWidth += $this.outerWidth(true);
+                // if item clone - calc summ without it
+                if($this.hasClass(ticker.cloneCls)) return;
+                    ticker.itemsWidth += $this.outerWidth(true);
             });
+        };
 
-            self.cloneWidth = self.itemsWidth;
-        },
-
-        _moveCarousel: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el,
-                $list = $this.find("." + self.listCls);
-
-            $list.css("left", '+=' + self.direction*opt.speed);
-
-            if(self.direction == -1) {
-                if(Math.abs(parseInt($list.css("left"))) >= self.itemsWidth) {
-                    $list.css("left", 0);
-
-                }
-            } else {
-                if(parseInt($list.css("left")) >= 0) {
-                    $list.css("left", -self.itemsWidth);
-                }
-            }
-        },
-
-        _eventOver: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el;
-
-            $this.on("mouseover", function() {
-                if(self.itemsWidth > self.$parent.width()) {
-                    clearInterval(self.timeout);
-                    self.timeout = false;
-                }
+        /**
+         * Method calc summ items height
+         */
+        function _calcItemsHeight() {
+            // set value 0 to default
+            ticker.itemsHeight = 0;
+            // calc sum
+            ticker.$items.each(function() {
+                var $this = $(this);
+                // if item clone - calc summ without it
+                if($this.hasClass(ticker.cloneCls)) return;
+                    ticker.itemsHeight += $this.outerHeight(true);
             });
-        },
+        };
 
-        _eventOut: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el,
-                $list = $this.find("." + self.listCls);
-
-            $this.on("mouseleave", function() {
-                if(self.mousemove) {
-                    $list.off(self.eventTypes.mousemove);
-                    $list.trigger(self.eventTypes.mouseup);
-                }
-
-                if(self.itemsWidth > self.$parent.width()) {
-                    if(self.timeout) return;
-                        self.timeout = setInterval(function() {self._moveCarousel()}, self.options.delay);
+        /**
+         * Event Methods _eventOver, _eventOut, _eventDragAndDrop
+         */
+        function _eventOver() {
+            // if mouse over ticker
+            $el.on("mouseover", function() {
+                // depending from mode choose condition
+                var condition = (ticker.settings.mode === "horizontal") ? (ticker.itemsWidth > ticker.$parent.width()) : (ticker.itemsHeight > ticker.$parent.height());
+                // if ticker width/height > outer width/height block
+                if(condition) {
+                    // make clearInterval
+                    clearInterval(ticker.intervalPointer);
+                    // make clearInterval
+                    ticker.intervalPointer = false;
                 }
             });
-        },
+        };
 
-        _eventDragAndDrop: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el,
-                flag = false,
-                $list = $this.find("." + self.listCls);
+        function _eventOut() {
+            // if mouse leave from el
+            $el.on("mouseleave", function() {
+                // depending from mode choose condition
+                var condition = (ticker.settings.mode === "horizontal") ? (ticker.itemsWidth > ticker.$parent.width()) : (ticker.itemsHeight > ticker.$parent.height());
+                // if mouse move
+                if(ticker.isMousemove) {
+                    // off event behaviour mousemove
+                    ticker.$list.off(ticker.eventTypes.mousemove);
+                    // call event mouseup
+                    ticker.$list.trigger(ticker.eventTypes.mouseup);
+                }
+                // if ticker width > outer width block
+                if(condition) {
+                    // protection from double setInterval
+                    if(ticker.intervalPointer) return;
+                        // call _moveTicker
+                        ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.settings.delay);
+                }
+            });
+        };
 
-            $list.on(self.eventTypes.mousedown, function(e) {
+        function _eventDragAndDrop() {
+            var flag = false;
+
+            ticker.$list.on(ticker.eventTypes.mousedown, function(e) {
                 var start = e.clientX || event.touches[0].pageX,
-                    startLeft = $list.css("left");
+                    startY = e.clientY || event.touches[0].pageY,
+                    $this = $(this),
+                    posList = parseFloat($(this).css("left")),
+                    posListY = parseFloat($(this).css("top"));
+
                 $(e.target).off("click");
+                clearInterval(ticker.intervalPointer);
+                ticker.intervalPointer = false;
                 flag = true;
 
-                clearInterval(self.timeout);
-                self.timeout = false;
+                $this.on(ticker.eventTypes.mousemove, function(e) {
+                    var x = e.clientX || event.touches[0].pageX,
+                        y = e.clientY || event.touches[0].pageY,
+                        // fix for touch device
+                        diff = start - x,
+                        diffY = startY - y;
 
-                $list.on(self.eventTypes.mousemove, function(e) {
-                    var offsetX = e.clientX || event.touches[0].pageX,
-                        merg = start - offsetX; // fix for touch device
-                    
-                    self.direction = (merg >= 0) ? -1 : 1;
-                    self.mousemove = true;
-
-                    if(flag) {
-                        if(parseFloat(startLeft) - merg >= 0) {
-                            $list.css("left", "-=" + self.itemsWidth);
-                            startLeft = -self.itemsWidth;
-                            start = e.clientX || event.touches[0].pageX;
-                        }
-
-                        if(Math.abs(parseFloat(startLeft) - merg) >= self.itemsWidth) {
-                            $list.css("left", 0);
-                            startLeft = 0;
-                            start = e.clientX || event.touches[0].pageX;
-                        }
-
-                        $list.css("left", parseFloat(startLeft) - merg + "px");
+                    if(ticker.settings.mode === "horizontal") {
+                        ticker.directionSwitcher = (diff >= 0) ? -1 : 1;
+                    } else if(ticker.settings.mode === "vertical") {
+                        ticker.directionSwitcher = (diffY >= 0) ? -1 : 1;
                     }
 
+                    ticker.isMousemove = true;
+
+                    if(flag) {
+                        if(ticker.settings.mode === "horizontal") {
+                            // if drag more left side
+                            if(posList - diff >= 0 && ticker.directionSwitcher === 1) {
+                                $this.css("left", "-=" + ticker.itemsWidth);
+                                posList = -ticker.itemsWidth;
+                                start = e.clientX || event.touches[0].pageX;
+                                diff = 0;
+                            }
+                            // if drag more right side
+                            if(posList - diff <= -ticker.itemsWidth && ticker.directionSwitcher === -1) {
+                                $this.css("left", 0);
+                                posList = 0;
+                                diff = 0;
+                                start = e.clientX || event.touches[0].pageX;
+                            }
+
+                            $this.css("left", posList - diff + "px");
+
+                        } else if(ticker.settings.mode === "vertical") {
+                            // if drag more top side
+                            if(posListY - diffY >= 0 && ticker.directionSwitcher === 1) {
+                                $this.css("top", "-=" + ticker.itemsHeight);
+                                posListY = -ticker.itemsHeight;
+                                startY = e.clientY || event.touches[0].pageY;
+                                diffY = 0;
+                            }
+                            // if drag more right side
+                            if(posListY - diffY <= -ticker.itemsHeight && ticker.directionSwitcher === -1) {
+                                $this.css("top", 0);
+                                posListY = 0;
+                                diffY = 0;
+                                startY = e.clientY || event.touches[0].pageY;
+                            }
+
+                            $this.css("top", posListY - diffY + "px");
+                        }
+                    }
                 });
             });
-            
-            $list.on(self.eventTypes.mouseup, function(e) {
+
+            ticker.$list.on(ticker.eventTypes.mouseup, function(e) {
+                var $target = $(e.target);
                 e.preventDefault();
 
-                if($(e.target).attr("href") || $(e.target).parents().attr("href") && self.mousemove){
-                    $(e.target).on("click", function(e) {
+                if($target.attr("href") || $target.parents().attr("href") && ticker.isMousemove){
+                    $target.on("click", function(e) {
                         e.preventDefault();
                     });
                 }
 
                 flag = false;
-                self.mousemove = false;
-                $list.off(self.eventTypes.mousemove);
+                ticker.isMousemove = false;
+                ticker.settings.direction = (ticker.directionSwitcher === 1) ? "next" : "prev";
+                $(this).off(ticker.eventTypes.mousemove);
                 
-                if(self.timeout) clearInterval(self.timeout);
+                if(ticker.intervalPointer) clearInterval(ticker.intervalPointer);
                 
-                if(self.touch) self.timeout = setInterval(function() {self._moveCarousel()}, self.options.delay);
+                if(ticker.touch) ticker.intervalPointer = setInterval(function() {_moveTicker()}, ticker.options.delay);
             });
-        },
+        };
 
-        resize: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el;
+        /**
+         * Public Methods
+         */
+        
+        /**
+         * resize carouselTicker
+         *
+         **/
 
-            $(window).on('resize', function() {
-                self._calcItemsWidth();
-                if(self.$parent.width() < self.itemsWidth) {
-                    if(!self.initialize) self.init();
-                } else {
-                    if(self.initialize) self._destructor();
-                }
-            });
-        },
+        el.resizeTicker = function() {
+            
+            _calcItemsWidth();
 
-        _destructor: function() {
-            var self = this,
-                opt = self.options,
-                $this = self.$el,
-                $list = $this.find("." + self.listCls);
+            if(ticker.itemsWidth > ticker.$parent.width()) {
+                if(!ticker.isInitialize) _init();
+            } else {
+                if(ticker.isInitialize) el.destructor();
+            }
+        };
 
-            $this.find("." + self.cloneCls).remove();
+        /**
+         * Stop rotate carouselTicker
+         */
 
-            if($this.find("." + self.wrapCls).length) {
-                $list.unwrap();
-                $list.css({'left': 'auto', 'position': 'static', 'width': 'auto'});
+        el.stop = function() {
+            clearInterval(ticker.intervalPointer);
+            ticker.intervalPointer = false;
+        };
+
+         /**
+         * Run carouselTicker
+         */
+
+        el.run = function() {
+            _start();
+        };
+
+        /**
+         * Destroy the current instance of the ticker (revert everything back to original state)
+         */
+
+        el.destructor = function() {
+            $el.find("." + ticker.cloneCls).remove();
+
+            if($el.find("." + ticker.wrapCls).length) {
+                ticker.$list.unwrap();
+                ticker.$list.css({'left': 'auto', 'position': 'static', 'width': 'auto'});
+                $el.css({"width": "auto", "position": "static"})
             }
 
-            clearInterval(self.timeout);
-            self.initialize = false;
-            self.timeout = false;
-        }
-    };
+            clearInterval(ticker.intervalPointer);
+            ticker.isInitialize = false;
+            ticker.intervalPointer = false;
+        };
 
-    $.fn.carouselTicker = function(settings) {
-        return this.each(function() {
-            new $.carouselTicker(this, settings);
-        });
-    };
+        /**
+         * Reload the ticker (revert all DOM changes, and re-initialize)
+         */
+        el.reloadCarouselTicker = function(settings){
+            if (settings != undefined) options = settings;
+            el.destructor();
+            _init();
+        }
+
+        _init();
+
+        // returns the current jQuery object
+        return this;
+    }
 
 })(jQuery);
