@@ -1,4 +1,4 @@
-## jQuery plugin carouselTicker
+# jQuery plugin carouselTicker
 # carouselTicker v1.0.0
 
 * Fully responsive - will adapt to any device
