@@ -1,0 +1,33 @@
+{
+    "name": "carouselTicker",
+    "title": "jQuery carouselTicker",
+    "description": "jQuery plugin for rotate scrolling",
+    "keywords": [
+        "color",
+        "animation"
+    ],
+    "version": "1.0.0",
+    "author": {
+        "name": "Yuriy Berezovskiy",
+        "url": "http://likeclever1.github.io/"
+    },
+    "maintainers": [
+        {
+          "name": "Yuriy Berezovskiy",
+          "url": "http://likeclever1.github.io/"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/mit-license.php"
+        }
+    ],
+    "bugs": "https://github.com/likeclever1/carouselTicker/issues",
+    "homepage": "http://likeclever1.github.io/carouselTicker/",
+    "docs": "http://likeclever1.github.io/carouselTicker/#getting-started",
+    "download": "https://github.com/likeclever1/carouselTicker/archive/gh-pages.zip",
+    "dependencies": {
+        "jquery": ">=1.9.1"
+    }
+}
