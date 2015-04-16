@@ -1,4 +1,5 @@
 (function ($, undefined) {
+
     $(window).on("load", function() {
         $("#carouselTicker").carouselTicker();
     })

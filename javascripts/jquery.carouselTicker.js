@@ -136,13 +136,11 @@
             }
 
             if(ticker.isInitialize) {
-                $(window).on("load", function() {
-                        // delete event dragstart from link and image
-                    $el.on("dragstart", function(e) {
-                        if (e.target.nodeName.toUpperCase() == "IMG" || e.target.nodeName.toUpperCase() == "A") {
-                            return false;
-                        }
-                    });
+                // delete event dragstart from link and image
+                $el.on("dragstart", function(e) {
+                    if (e.target.nodeName.toUpperCase() == "IMG" || e.target.nodeName.toUpperCase() == "A") {
+                        return false;
+                    }
                 });
             }
 
@@ -448,7 +446,14 @@
             _init();
         }
 
-        _init();
+        if(document.readyState === "loading") {
+            $(window).on("load", function() {
+                _init();
+            });
+        } else {
+            _init();
+        }
+        
 
         // returns the current jQuery object
         return this;
