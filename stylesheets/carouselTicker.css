@@ -44,3 +44,14 @@
     line-height: 60px;
     text-align: center;
 }
+
+
+#carouselTicker .carouselTicker__item {
+    width: auto;
+    height: auto;
+    line-height: normal;
+}
+
+.carouselTicker__item img {
+    vertical-align: top;
+}

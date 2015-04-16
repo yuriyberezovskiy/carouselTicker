@@ -1,5 +1,7 @@
 (function ($, undefined) {
-    $("#carouselTicker").carouselTicker();
+    $(window).on("load", function() {
+        $("#carouselTicker").carouselTicker();
+    })
     
     $("#carouselTicker1").carouselTicker({
         "direction": "next"
