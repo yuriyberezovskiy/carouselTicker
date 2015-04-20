@@ -217,10 +217,12 @@
             ticker.itemsWidth = 0;
             // calc sum
             ticker.$items.each(function() {
-                var $this = $(this);
+                var $this = $(this),
+                    style = this.currentStyle || window.getComputedStyle(this),
+                    margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
                 // if item clone - calc summ without it
                 if($this.hasClass(ticker.cloneCls)) return;
-                    ticker.itemsWidth += $this.outerWidth(true);
+                    ticker.itemsWidth += this.getBoundingClientRect().width + margin;
             });
         };
 
