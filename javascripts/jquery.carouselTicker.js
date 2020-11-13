@@ -186,9 +186,9 @@
         _moveTicker();
       }, ticker.settings.delay);
       // initialize eventOver event
-      _eventOver();
+      $el.on("mouseover", _eventOver);
       // initialize eventOut event
-      _eventOut();
+      $el.on("mouseleave", _eventOut);
       // initialize drag and drop event
       _eventDragAndDrop();
     };
@@ -258,48 +258,42 @@
      * Event Methods _eventOver, _eventOut, _eventDragAndDrop
      */
     function _eventOver() {
-      // if mouse over ticker
-      $el.on("mouseover", function () {
-        // depending from mode choose condition
-        var condition =
-          ticker.settings.mode === "horizontal"
-            ? ticker.itemsWidth > ticker.$parent.width()
-            : ticker.itemsHeight > ticker.$parent.height();
-        // if ticker width/height > outer width/height block
-        if (condition) {
-          // make clearInterval
-          clearInterval(ticker.intervalPointer);
-          // make clearInterval
-          ticker.intervalPointer = false;
-        }
-      });
+      // depending from mode choose condition
+      var condition =
+        ticker.settings.mode === "horizontal"
+          ? ticker.itemsWidth > ticker.$parent.width()
+          : ticker.itemsHeight > ticker.$parent.height();
+      // if ticker width/height > outer width/height block
+      if (condition) {
+        // make clearInterval
+        clearInterval(ticker.intervalPointer);
+        // make clearInterval
+        ticker.intervalPointer = false;
+      }
     }
 
     function _eventOut() {
-      // if mouse leave from el
-      $el.on("mouseleave", function () {
-        // depending from mode choose condition
-        var condition =
-          ticker.settings.mode === "horizontal"
-            ? ticker.itemsWidth > ticker.$parent.width()
-            : ticker.itemsHeight > ticker.$parent.height();
-        // if mouse move
-        if (ticker.isMousemove) {
-          // off event behaviour mousemove
-          ticker.$list.off(ticker.eventTypes.mousemove);
-          // call event mouseup
-          ticker.$list.trigger(ticker.eventTypes.mouseup);
-        }
-        // if ticker width > outer width block
-        if (condition) {
-          // protection from double setInterval
-          if (ticker.intervalPointer) return;
-          // call _moveTicker
-          ticker.intervalPointer = setInterval(function () {
-            _moveTicker();
-          }, ticker.settings.delay);
-        }
-      });
+      // depending from mode choose condition
+      var condition =
+        ticker.settings.mode === "horizontal"
+          ? ticker.itemsWidth > ticker.$parent.width()
+          : ticker.itemsHeight > ticker.$parent.height();
+      // if mouse move
+      if (ticker.isMousemove) {
+        // off event behaviour mousemove
+        ticker.$list.off(ticker.eventTypes.mousemove);
+        // call event mouseup
+        ticker.$list.trigger(ticker.eventTypes.mouseup);
+      }
+      // if ticker width > outer width block
+      if (condition) {
+        // protection from double setInterval
+        if (ticker.intervalPointer) return;
+        // call _moveTicker
+        ticker.intervalPointer = setInterval(function () {
+          _moveTicker();
+        }, ticker.settings.delay);
+      }
     }
 
     function _eventDragAndDrop() {
@@ -442,6 +436,9 @@
      */
 
     el.stop = function () {
+      $el.off("mouseover", _eventOver);
+      $el.off("mouseleave", _eventOut);
+
       clearInterval(ticker.intervalPointer);
       ticker.intervalPointer = false;
     };
@@ -472,9 +469,8 @@
         $el.css({ width: "auto", position: "static" });
       }
 
-      clearInterval(ticker.intervalPointer);
+      el.stop();
       ticker.isInitialize = false;
-      ticker.intervalPointer = false;
     };
 
     /**

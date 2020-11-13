@@ -7,9 +7,20 @@
     ).carouselTicker();
 
     var destroyBtn = $("#destory-carouselTicker");
+    var carouselForDescructorRunning = true;
+
     destroyBtn.on("click", function () {
-      carouselForDescructor.destructor();
-      destroyBtn.text("Destroyed");
+      if (carouselForDescructorRunning) {
+        carouselForDescructor.destructor();
+        carouselForDescructorRunning = false;
+        $(this).text("Start");
+      } else {
+        carouselForDescructor = $(
+          "#carouselTicker-destructor-example"
+        ).carouselTicker();
+        carouselForDescructorRunning = true;
+        $(this).text("Destroy");
+      }
     });
   });
 
