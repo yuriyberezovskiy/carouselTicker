@@ -48,4 +48,8 @@
       console.log("callback");
     },
   });
+
+  $("#clickMe").on("click", function () {
+    alert("test");
+  });
 })(jQuery);
