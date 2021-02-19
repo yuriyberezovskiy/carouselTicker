@@ -1,28 +1,25 @@
 {
   "name": "carousel-ticker",
-  "version": "1.0.1",
+  "version": "1.0.0",
+  "description": "JQuery plugin for rotate scrolling",
   "main": "javascript/jquery.carouselTicker.js",
   "title": "jQuery carouselTicker",
-  "author": {
-    "name": "Yuriy Berezovskiy",
-    "email": "yuriy.beresovskiy@gmail.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuriyberezovskiy/carouselTicker.git"
   },
-  "license": "MIT",
-  "description": "jQuery plugin for rotate scrolling",
   "keywords": [
     "jquery-plugin",
     "carouselTicker",
     "jquery-carouselTicker",
     "jquery-carousel"
   ],
-  "docs": "http://likeclever1.github.io/carouselTicker/#getting-started",
-  "demo": "http://likeclever1.github.io/carouselTicker/",
-  "bugs": "https://github.com/likeclever1/carouselTicker/issues",
-  "homepage": "http://likeclever1.github.io/carouselTicker/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yuriyberezovskiy/carouselTicker/archive/master.zip"
+  "author": "Yuriy Berezovskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuriyberezovskiy/carouselTicker/issues"
   },
+  "homepage": "http://yuriyberezovskiy.github.io/carouselTicker/",
   "dependencies": {
     "jquery": ">=1.9.1"
   }
