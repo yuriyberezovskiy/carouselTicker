@@ -380,12 +380,12 @@
 
       ticker.$list.on(ticker.eventTypes.mouseup, function (e) {
         var $target = $(e.target);
-        e.preventDefault();
 
         if (
           $target.attr("href") ||
           ($target.parents().attr("href") && ticker.isMousemove)
         ) {
+          e.preventDefault();
           $target.on("click", function (e) {
             e.preventDefault();
           });
