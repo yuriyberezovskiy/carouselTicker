@@ -46,7 +46,8 @@
 }
 
 #carouselTicker .carouselTicker__item,
-#carouselTicker-destructor-example .carouselTicker__item {
+#carouselTicker-destructor-example .carouselTicker__item,
+#carouselTicker-buttons-controls-example .carouselTicker__item {
   width: auto;
   height: auto;
   line-height: normal;
