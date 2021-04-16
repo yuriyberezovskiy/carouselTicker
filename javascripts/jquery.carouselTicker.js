@@ -482,6 +482,26 @@
       _init();
     };
 
+    /**
+     * Start rotate to next direction
+     */
+    el.next = function () {
+      el.stop();
+      ticker.settings.direction = "next";
+      ticker.directionSwitcher = ticker.settings.direction === "prev" ? -1 : 1;
+      el.run();
+    };
+
+    /**
+     * Start rotate to prev direction
+     */
+    el.prev = function () {
+      el.stop();
+      ticker.settings.direction = "prev";
+      ticker.directionSwitcher = ticker.settings.direction === "prev" ? -1 : 1;
+      el.run();
+    };
+
     if (document.readyState === "loading") {
       $(window).on("load", function () {
         _init();
